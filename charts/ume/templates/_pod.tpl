@@ -68,14 +68,19 @@ containers:
       ports:
         - name: http
           containerPort: {{ .Values.service.port }}
-      {{- if .Values.global.extraEnvVars }}
       env:
+        - name: UME_UPLOADER_KEY
+          valueFrom:
+            secretKeyRef:
+                name: {{ default (printf "%s-uploader-key" (include "ume.fullname" .)) .Values.config.uploaderKey.secret.existingSecret }}
+                key: {{ default "uploader-key" .Values.config.uploaderKey.secret.key }}
+      {{- if .Values.global.extraEnvVars }}
       {{ include "common.tplvalues.render" (dict "value" .Values.global.extraEnvVars "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.deployment.startupProbe.enabled }}
       startupProbe:
         httpGet:
-            path: /
+            path: /heartbeat
             port: {{ .Values.service.port }}
         initialDelaySeconds: {{ .Values.deployment.startupProbe.initialDelaySeconds }}
         timeoutSeconds: {{ .Values.deployment.startupProbe.timeoutSeconds }}

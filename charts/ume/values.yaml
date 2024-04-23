@@ -117,6 +117,10 @@ serviceAccount:
 ## @param deployment.livenessProbe.failureThreshold Minimum consecutive failures for the probe to considered successful.
 deployment:
   config: |
+    {{- if .Values.global.domain -}}
+    domain     = {{ .Values.global.domain | quote }}
+    {{- end }}
+
     logging {
       level = "info"
       json  = true
@@ -125,8 +129,6 @@ deployment:
     server {
       port = {{ .Values.service.port }}
     }
-
-    storage "filesystem" {}
 
   strategy: {}
   # type: RollingUpdate
