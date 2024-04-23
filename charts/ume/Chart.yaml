@@ -41,5 +41,5 @@ annotations:
   charts.noelware.org/categories: Miscellaneous
 dependencies:
   - name: common
-    version: 2.14.1
+    version: 2.19.1
     repository: oci://registry-1.docker.io/bitnamicharts
