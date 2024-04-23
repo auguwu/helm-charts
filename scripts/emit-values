@@ -87,51 +87,19 @@ if ! command -v bun >/dev/null; then
     exit 1
 fi
 
-if ! [ -d "$DIR/.cache" ] && mkdir -p "$DIR/.cache"
+! [ -d "$DIR/.cache" ] && mkdir -p "$DIR/.cache"
+if ! [ -d "$DIR/.cache/bitnami-helm-gen" ]; then
+    echo "~> missing \`bitnami-helm-gen\` directory in .cache, installing via \`bun\`..."
 
-# if ! command -v bun >/dev/null; then
-#     echo "[ERROR] ===> Missing \`bun\` in host machine, install it please!"
-#     exit 1
-# fi
+    git clone https://github.com/bitnami/readme-generator-for-helm "$DIR/.cache/bitnami-helm-gen"
+    bun install "$DIR/.cache/bitnami-helm-gen"
 
-# ! [ -d "$DIR/.cache" ] && mkdir -p "$DIR/.cache"
+    # moves bun.lockb to its respective directory
+    mv "$DIR/bun.lockb" "$DIR/.cache/bitnami-helm-gen"
 
-# if ! [ -d "$DIR/.cache/bitnami-helm-gen" ]; then
-#     echo "===> Missing $DIR/.cache/bitnami-helm-gen directory, installing..."
+    # removes package.json since it only references the `bun install`
+    # invocation as a dependency (and we don't want that)
+    rm "$DIR/package.json"
+fi
 
-#     git clone https://github.com/bitnami-labs/readme-generator-for-helm "$DIR/.cache/bitnami-helm-gen"
-#     bun install "$DIR/.cache/bitnami-helm-gen"
-# fi
-
-# # TODO(@auguwu): auto generate this list (if we need to)
-# charts=(
-#     "$DIR/charts/jetbrains/hub"
-#     "$DIR/charts/jetbrains/youtrack"
-#     "$DIR/charts/noelware/hazel"
-#     "$DIR/charts/noelware/petal"
-#     "$DIR/charts/docker-auth"
-#     "$DIR/charts/docker-registry"
-# )
-
-# for chart in "${charts[@]}"; do
-#     rel="./$(realpath --relative-to="$DIR" "$chart")"
-#     echo "Updating README.md with Helm values... [$rel]"
-
-#     if ! [ -f "$chart/values.yaml" ]; then
-#         echo ".... Skipping due to no \`values.yaml\` in $rel"
-#         continue
-#     fi
-
-#     if ! [ -f "$chart/README.md" ]; then
-#         echo ".... Skipping due to no \`README.md\` in $rel"
-#         continue
-#     fi
-
-#     echo ".... Generating..."
-#     (cd "$DIR/.cache/bitnami-helm-gen" && bun --bun bin/index.js --values "$chart/values.yaml" --readme "$chart/README.md")
-
-#     if [ "$?" != "0" ]; then
-#         echo ".... Failed to generate, view logs above"
-#         exit 1
-#     fi
-# done
+charts::generate-readme "yes"
