@@ -1,4 +1,4 @@
-# 🐻‍❄️🏴‍☠️ Noel's Helm Charts: Curated catalog of Noel's Helm charts.
+# 🐻‍❄️🏴‍☠️ Noel's Helm Charts
 > *Helm Charts for Noel's software and other software I use on a day to day basis*
 
 This repository contains all Helm charts that I use in my own infrastructure.
