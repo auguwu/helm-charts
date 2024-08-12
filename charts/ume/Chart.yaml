@@ -24,7 +24,7 @@ description: "🐻‍❄️💐 Easy, and flexible image host to share with your
 apiVersion: v2
 
 # renovate: image=auguwu/ume
-appVersion: "4.0.3"
+appVersion: "4.0.5"
 version: 0.1.0
 type: application
 home: https://floofy.dev/oss/ume
